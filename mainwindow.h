@@ -26,6 +26,8 @@ private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void hideWindow();
 
+    void openFileDialog();
+
 private:
     Ui::MainWindow *ui;
 
@@ -48,6 +50,7 @@ private:
     QPushButton *exitButton;
     QPushButton *lockWindow;
     QPushButton *toSystemtray;
+    QPushButton *folderButton;
     QFontDatabase *fontDatabase;
 
     QSystemTrayIcon *trayicon;

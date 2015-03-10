@@ -56,6 +56,12 @@ MainWindow::MainWindow(QWidget *parent) :
     lockWindow->setStyleSheet("border: 0px");
     lockWindow->setMaximumSize(20, 20);
 
+    folderButton = new QPushButton;
+    folderButton->setMinimumSize(18, 13);
+    folderButton->setMaximumSize(18, 13);
+    folderButton->setIcon(QIcon("icons/folder.png"));
+    folderButton->setStyleSheet("border: 0px");
+
     toSystemtray = new QPushButton;
     toSystemtray->setIcon(QIcon("icons/tosystemtray.png"));
     toSystemtray->setStyleSheet("border: 0px");
@@ -69,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     bottomLayout->addWidget(lockWindow);
     bottomLayout->addWidget(toSystemtray);
+    bottomLayout->addWidget(folderButton);
     mainLayout->addLayout(bottomLayout);
 
     qDebug() << "FileHandler initialized";
@@ -80,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(exitButton, SIGNAL(clicked()), this, SLOT(exitTrigger()));
     connect(lockWindow, SIGNAL(clicked()), this, SLOT(lockWindowButton()));
     connect(toSystemtray, SIGNAL(clicked()), this, SLOT(hideWindow()));
+    connect(folderButton, SIGNAL(clicked()), this, SLOT(openFileDialog()));
 
     connect(trayicon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
@@ -100,6 +108,17 @@ MainWindow::~MainWindow()
 void MainWindow::hideWindow()
 {
     setVisible(false);
+}
+
+void MainWindow::openFileDialog()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Avaa muistiinpanot"), "", tr("Text files (*.txt)"));
+    if (filePath != "")
+    {
+        FileHandler.changeFilePath(filePath);
+        mainEdit->setText(FileHandler.loadFile());
+        mainEdit->setFocus();
+    }
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)

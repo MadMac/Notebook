@@ -20,3 +20,6 @@ HEADERS  += mainwindow.h \
     filehandler.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES += \
+    asetukset.txt
