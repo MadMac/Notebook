@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 #include <QtWidgets>
+
 #include "filehandler.h"
+#include "changeattributes.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,6 +30,8 @@ private slots:
 
     void openFileDialog();
 
+    void openAttributesWindow();
+
 private:
     Ui::MainWindow *ui;
 
@@ -51,6 +55,7 @@ private:
     QPushButton *lockWindow;
     QPushButton *toSystemtray;
     QPushButton *folderButton;
+    QPushButton *attributesButton;
     QFontDatabase *fontDatabase;
 
     QSystemTrayIcon *trayicon;
@@ -60,6 +65,8 @@ private:
     filehandler FileHandler;
 
     QPoint mousePos;
+
+    changeattributes *ChangeAttributesWindow;
 
 
 

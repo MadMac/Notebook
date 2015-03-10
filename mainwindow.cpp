@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     bottomLayout = new QHBoxLayout;
 
     mainEdit = new QTextEdit;
-    mainEdit->setMinimumSize(300, 500);
+    mainEdit->setMinimumSize(500, 500);
     mainEdit->setText(FileHandler.loadFile());
     mainEdit->setStyleSheet("background-color: #ffffff; border:0px;");
     mainEdit->setFrameStyle(0);
@@ -72,6 +72,12 @@ MainWindow::MainWindow(QWidget *parent) :
     toSystemtray->setMaximumSize(20, 20);
     toSystemtray->setToolTip("Hides to tray");
 
+    attributesButton = new QPushButton;
+    attributesButton->setIcon(QIcon("icons/attributes.png"));
+    attributesButton->setStyleSheet("border: 0px");
+    attributesButton->setMaximumSize(13, 13);
+    attributesButton->setToolTip("Open window attributes");
+
     topLayout->addWidget(exitButton);
     topLayout->setAlignment(Qt::AlignRight);
     mainLayout->addLayout(topLayout);
@@ -81,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     bottomLayout->addWidget(lockWindow);
     bottomLayout->addWidget(toSystemtray);
     bottomLayout->addWidget(folderButton);
+    bottomLayout->addWidget(attributesButton);
     mainLayout->addLayout(bottomLayout);
 
     qDebug() << "FileHandler initialized";
@@ -93,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(lockWindow, SIGNAL(clicked()), this, SLOT(lockWindowButton()));
     connect(toSystemtray, SIGNAL(clicked()), this, SLOT(hideWindow()));
     connect(folderButton, SIGNAL(clicked()), this, SLOT(openFileDialog()));
+    connect(attributesButton, SIGNAL(clicked()), this, SLOT(openAttributesWindow()));
 
     connect(trayicon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
@@ -102,6 +110,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateCursor()));
     timer->start();
+
 
 }
 
@@ -114,6 +123,12 @@ void MainWindow::hideWindow()
 {
     trayicon->show();
     setVisible(false);
+}
+
+void MainWindow::openAttributesWindow()
+{
+    ChangeAttributesWindow = new changeattributes();
+    ChangeAttributesWindow->show();
 }
 
 void MainWindow::openFileDialog()
@@ -157,7 +172,7 @@ void MainWindow::paintEvent(QPaintEvent *)
         QPainter painter(this);
 
         painter.setPen(QPen(QColor(227, 227, 227), 15));
-        painter.drawLine(QPoint(20, 16), QPoint(270, 16));
+        painter.drawLine(QPoint(20, 16), QPoint(size().width()-50, 16));
     }
 }
 
@@ -191,7 +206,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *e)
     QPoint newPos;
     if (e->buttons() && Qt::LeftButton)
     {
-        if (e->pos().x() > 15 && e->pos().x() < 280 && e->pos().y() > 10 && e->pos().y() < 30)
+        if (e->pos().x() > 15 && e->pos().x() < size().width()-50 && e->pos().y() > 10 && e->pos().y() < 30)
         {
             movingWindow = true;
 
