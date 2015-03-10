@@ -25,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     trayicon = new QSystemTrayIcon;
     setWindowIcon(QIcon("icons/systemtray.png"));
     trayicon->setIcon(QIcon("icons/systemtray.png"));
-    trayicon->show();
 
     mainLayout = new QVBoxLayout;
     topLayout = new QHBoxLayout;
@@ -38,6 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mainEdit->setFrameStyle(0);
     mainEdit->setTextInteractionFlags(Qt::TextEditorInteraction);
     mainEdit->setFont(*normalFont);
+    mainEdit->verticalScrollBar()->setMaximumWidth(5);
+    mainEdit->verticalScrollBar()->setStyleSheet("QScrollBar:vertical { background-color: #ffffff; }"
+                                                 "QScrollBar::handle:vertical { border: 0px; background-color: #F5F5F5; border-radius: 2px; }");
 
     header  = new QLabel;
     header->setText("Muistikirja");
@@ -55,17 +57,20 @@ MainWindow::MainWindow(QWidget *parent) :
     lockWindow->setCheckable(true);
     lockWindow->setStyleSheet("border: 0px");
     lockWindow->setMaximumSize(20, 20);
+    lockWindow->setToolTip("Locks window movement");
 
     folderButton = new QPushButton;
     folderButton->setMinimumSize(18, 13);
     folderButton->setMaximumSize(18, 13);
     folderButton->setIcon(QIcon("icons/folder.png"));
     folderButton->setStyleSheet("border: 0px");
+    folderButton->setToolTip("Open file");
 
     toSystemtray = new QPushButton;
     toSystemtray->setIcon(QIcon("icons/tosystemtray.png"));
     toSystemtray->setStyleSheet("border: 0px");
     toSystemtray->setMaximumSize(20, 20);
+    toSystemtray->setToolTip("Hides to tray");
 
     topLayout->addWidget(exitButton);
     topLayout->setAlignment(Qt::AlignRight);
@@ -107,6 +112,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::hideWindow()
 {
+    trayicon->show();
     setVisible(false);
 }
 
@@ -127,6 +133,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
     {
         qDebug() << "Test";
         setVisible(true);
+        trayicon->hide();
         raise();
         QApplication::setActiveWindow(this);
     }
@@ -145,10 +152,13 @@ void MainWindow::updateCursor()
 
 void MainWindow::paintEvent(QPaintEvent *)
 {
-    QPainter painter(this);
+    if (!moveLocked)
+    {
+        QPainter painter(this);
 
-    painter.setPen(QPen(QColor(227, 227, 227), 15));
-    painter.drawLine(QPoint(20, 16), QPoint(270, 16));
+        painter.setPen(QPen(QColor(227, 227, 227), 15));
+        painter.drawLine(QPoint(20, 16), QPoint(270, 16));
+    }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *e)
@@ -167,10 +177,11 @@ void MainWindow::lockWindowButton()
     {
         lockWindow->setIcon(QIcon("icons/lock_closed.png"));
         moveLocked = true;
-
+        repaint();
     } else {
         lockWindow->setIcon(QIcon("icons/lock_open.png"));
         moveLocked = false;
+        repaint();
     }
 }
 
