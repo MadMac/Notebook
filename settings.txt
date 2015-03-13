@@ -1,0 +1,4 @@
+Muistiinpanot.txt
+200
+600
+12

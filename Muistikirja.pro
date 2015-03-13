@@ -15,16 +15,17 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     filehandler.cpp \
-    changeattributes.cpp
+    changeattributes.cpp \
+    settingshandler.cpp
 
 HEADERS  += mainwindow.h \
     filehandler.h \
-    changeattributes.h
+    changeattributes.h \
+    settingshandler.h
 
 FORMS    += mainwindow.ui
 
 DISTFILES += \
+    settings.txt \
     asetukset.txt
 
-QMAKE_LFLAGS += -static-libgcc
-QMAKE_LFLAGS += -static-libstdc++

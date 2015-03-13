@@ -6,6 +6,7 @@
 
 #include "filehandler.h"
 #include "changeattributes.h"
+#include "settingshandler.h"
 
 namespace Ui {
 class MainWindow;
@@ -18,6 +19,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void updateWindow();
+
 
 private slots:
     void saveTrigger();
@@ -31,6 +34,8 @@ private slots:
     void openFileDialog();
 
     void openAttributesWindow();
+
+
 
 private:
     Ui::MainWindow *ui;
@@ -67,6 +72,8 @@ private:
     QPoint mousePos;
 
     changeattributes *ChangeAttributesWindow;
+    settingshandler SettingsHandler;
+
 
 
 

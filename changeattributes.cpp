@@ -1,7 +1,9 @@
 #include "changeattributes.h"
+#include "mainwindow.h"
 
 changeattributes::changeattributes(QWidget *parent) : QDialog(parent)
 {
+    qDebug() << parent;
     setFixedSize(250, 200);
     setWindowTitle("Muistikirja - Settings");
     setWindowFlags(Qt::FramelessWindowHint);
@@ -63,6 +65,17 @@ changeattributes::changeattributes(QWidget *parent) : QDialog(parent)
     mainLayout->addLayout(formLayout);
 
     connect(exitButton, SIGNAL(clicked()), this, SLOT(closeWindow()));
+    connect(saveButton, SIGNAL(clicked()), this, SLOT(saveSettings()));
+}
+
+void changeattributes::init(MainWindow *pWindow, settingshandler *handler)
+{
+    SettingsHandler = handler;
+    parentWindow = pWindow;
+
+    widthEdit->setText(QString::number(SettingsHandler->getWindowSize().width()));
+    heightEdit->setText(QString::number(SettingsHandler->getWindowSize().height()));
+    fontSizeEdit->setText(QString::number(SettingsHandler->getFontSize()));
 }
 
 
@@ -70,7 +83,6 @@ changeattributes::~changeattributes()
 {
 
 }
-
 
 void changeattributes::paintEvent(QPaintEvent *)
 {
@@ -83,7 +95,7 @@ void changeattributes::paintEvent(QPaintEvent *)
 
 void changeattributes::closeWindow()
 {
-    close();
+    hide();
 }
 
 void changeattributes::mousePressEvent(QMouseEvent *e)
@@ -116,4 +128,15 @@ void changeattributes::mouseMoveEvent(QMouseEvent *e)
 
         this->move(newPos);
     }
+}
+
+void changeattributes::saveSettings()
+{
+    QSize newSize;
+    newSize.setHeight(heightEdit->text().toInt());
+    newSize.setWidth(widthEdit->text().toInt());
+    SettingsHandler->setFontSize(fontSizeEdit->text().toInt());
+    SettingsHandler->setWindowSize(newSize);
+    parentWindow->updateWindow();
+    hide();
 }

@@ -30,9 +30,12 @@ MainWindow::MainWindow(QWidget *parent) :
     topLayout = new QHBoxLayout;
     bottomLayout = new QHBoxLayout;
 
+    setFixedSize(500,600);
+
     mainEdit = new QTextEdit;
-    mainEdit->setMinimumSize(500, 500);
-    mainEdit->setText(FileHandler.loadFile());
+    mainEdit->setFixedSize(480, 475);
+
+
     mainEdit->setStyleSheet("background-color: #ffffff; border:0px;");
     mainEdit->setFrameStyle(0);
     mainEdit->setTextInteractionFlags(Qt::TextEditorInteraction);
@@ -90,8 +93,6 @@ MainWindow::MainWindow(QWidget *parent) :
     bottomLayout->addWidget(attributesButton);
     mainLayout->addLayout(bottomLayout);
 
-    qDebug() << "FileHandler initialized";
-
     ui->centralWidget->setLayout(mainLayout);
     ui->centralWidget->setStyleSheet("Border:1px solid rgb(0, 0, 0)");
 
@@ -107,16 +108,23 @@ MainWindow::MainWindow(QWidget *parent) :
     movingWindow = false;
     moveLocked = false;
 
+    SettingsHandler.loadSettings();
+    FileHandler.changeFilePath(SettingsHandler.getNoteBookFile());
+    updateWindow();
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateCursor()));
     timer->start();
 
+
+    ChangeAttributesWindow = new changeattributes();
 
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete ChangeAttributesWindow;
 }
 
 void MainWindow::hideWindow()
@@ -127,8 +135,17 @@ void MainWindow::hideWindow()
 
 void MainWindow::openAttributesWindow()
 {
-    ChangeAttributesWindow = new changeattributes();
-    ChangeAttributesWindow->show();
+
+    if (ChangeAttributesWindow->isHidden())
+    {
+
+        ChangeAttributesWindow->init(this, &SettingsHandler);
+
+        ChangeAttributesWindow->show();
+    } else {
+
+        ChangeAttributesWindow->raise();
+    }
 }
 
 void MainWindow::openFileDialog()
@@ -136,7 +153,9 @@ void MainWindow::openFileDialog()
     QString filePath = QFileDialog::getOpenFileName(this, tr("Avaa muistiinpanot"), "", tr("Text files (*.txt)"));
     if (filePath != "")
     {
-        FileHandler.changeFilePath(filePath);
+        SettingsHandler.setNoteBookFile(filePath);
+        updateWindow();
+        FileHandler.changeFilePath(SettingsHandler.getNoteBookFile());
         mainEdit->setText(FileHandler.loadFile());
         mainEdit->setFocus();
     }
@@ -146,7 +165,6 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason == QSystemTrayIcon::DoubleClick)
     {
-        qDebug() << "Test";
         setVisible(true);
         trayicon->hide();
         raise();
@@ -221,7 +239,19 @@ void MainWindow::mouseMoveEvent(QMouseEvent *e)
         this->move(newPos);
     }
 
-    qDebug() << mouseDiff;
+    //qDebug() << mouseDiff;
+}
+
+void MainWindow::updateWindow()
+{
+    SettingsHandler.saveSettings();
+    setFixedSize(SettingsHandler.getWindowSize());
+    mainEdit->setFixedSize(size().width()-15, size().height()-135);
+    normalFont->setPixelSize(SettingsHandler.getFontSize());
+    mainEdit->setFont(*normalFont);
+    mainEdit->setText(FileHandler.loadFile());
+
+    repaint();
 }
 
 void MainWindow::saveTrigger()

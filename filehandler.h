@@ -17,6 +17,8 @@ public:
     void saveFile(QTextDocument *allText);
     void changeFilePath(QString path);
 
+
+
 private:
     QFile file;
     QFile settingsFile;

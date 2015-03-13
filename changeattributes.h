@@ -2,6 +2,11 @@
 #define CHANGEATTRIBUTES_H
 
 #include <QtWidgets>
+#include "filehandler.h"
+#include "settingshandler.h"
+
+
+class MainWindow;
 
 class changeattributes : public QDialog
 {
@@ -10,12 +15,15 @@ public:
     explicit changeattributes(QWidget *parent = 0);
     ~changeattributes();
 
+    void init(MainWindow *pWindow, settingshandler *handler);
+
 signals:
 
 public slots:
 
 private slots:
     void closeWindow();
+    void saveSettings();
 
 private:
 
@@ -42,10 +50,14 @@ private:
     QLabel *heightText;
     QLabel *fontSizeText;
 
-
-    QFrame windowFrame;
-
     QPushButton *exitButton;
+
+    settingshandler *SettingsHandler;
+
+    MainWindow *parentWindow;
+
+
+
 };
 
 #endif // CHANGEATTRIBUTES_H

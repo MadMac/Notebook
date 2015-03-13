@@ -2,39 +2,17 @@
 
 filehandler::filehandler()
 {
-    settingsFile.setFileName("asetukset.txt");
-
-    settingsFile.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream settingsIn(&settingsFile);
-    QString filePath;
-
-    while(!settingsIn.atEnd()) {
-        filePath = settingsIn.readLine();
-    }
-
-    settingsFile.close();
-
-    filePath.trimmed();
-    file.setFileName(filePath);
-    qDebug() << filePath;
 
 }
 
 filehandler::~filehandler()
 {
     file.close();
-    settingsFile.close();
 }
 
 void filehandler::changeFilePath(QString path)
 {
     file.setFileName(path);
-
-    settingsFile.open(QIODevice::WriteOnly | QIODevice::Text);
-    settingsFile.resize(0);
-    QTextStream out(&settingsFile);
-    out << path;
-    settingsFile.close();
 }
 
 QString filehandler::loadFile()
