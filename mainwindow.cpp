@@ -114,7 +114,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateCursor()));
-    timer->start();
+    timer->start(1);
 
 
     ChangeAttributesWindow = new changeattributes();
