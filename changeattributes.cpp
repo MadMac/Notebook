@@ -5,7 +5,7 @@ changeattributes::changeattributes(QWidget *parent) : QDialog(parent)
 {
     qDebug() << parent;
     setFixedSize(250, 200);
-    setWindowTitle("Muistikirja - Settings");
+    setWindowTitle("Notebook - Settings");
     setWindowFlags(Qt::FramelessWindowHint);
 
     mainLayout = new QVBoxLayout;

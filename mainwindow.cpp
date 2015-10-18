@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setWindowTitle("Muistikirja");
+    setWindowTitle("Notebook");
     setWindowFlags(Qt::FramelessWindowHint);
 
     fontDatabase->addApplicationFont("fonts/Roboto-Regular.ttf");
@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
                                                  "QScrollBar::handle:vertical { border: 0px; background-color: #F5F5F5; border-radius: 2px; }");
 
     header  = new QLabel;
-    header->setText("Muistikirja");
+    header->setText("Notebook");
     header->setFont(*headerFont);
     header->setAlignment(Qt::AlignRight);
     header->setStyleSheet("margin-right: 20px; margin-top: 15px; margin-bottom:15px; border: 0px;");
@@ -150,7 +150,7 @@ void MainWindow::openAttributesWindow()
 
 void MainWindow::openFileDialog()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Avaa muistiinpanot"), "", tr("Text files (*.txt)"));
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open notes"), "", tr("Text files (*.txt)"));
     if (filePath != "")
     {
         SettingsHandler.setNoteBookFile(filePath);
